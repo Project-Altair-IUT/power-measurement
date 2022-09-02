@@ -2,6 +2,8 @@
 #include<SD.h>
 #include <Wire.h>
 
+unsigned long myTime; //variable for storing millis time
+
 File dataFile;
 // Floats for ADC voltage & Input voltage
 float adc_voltage = 0.0;
@@ -36,12 +38,19 @@ void setup()
 uint16_t line = 1;
  
 void loop(){
+
+  
   dataFile = SD.open("POWER.txt", FILE_WRITE);
   float v = voltageRead();
   float i = currentRead();
+  myTime = millis();
+  delay (1000);
+  
   if (dataFile) 
   {
     Serial.print(line);    
+    Serial.print("  Time = ");
+    Serial.println(myTime);
     Serial.print("  ||  Voltage = ");
     Serial.print(v);
     Serial.print("V Current = ");
@@ -49,6 +58,8 @@ void loop(){
     Serial.println("A");
     // Write data to SD card file (POWER.txt)
     dataFile.print(line++);
+    dataFile.print("  Time = ");
+    dataFile.print(myTime);    
     dataFile.print("  ||  Voltage = ");
     dataFile.print(v);
     dataFile.print("V Current = ");
